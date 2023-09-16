@@ -1,4 +1,4 @@
-package io.github.wulkanowy.plugins
+package io.github.wulkanowy.schools.plugins
 
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*

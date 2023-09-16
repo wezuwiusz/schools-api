@@ -1,6 +1,7 @@
-package io.github.wulkanowy
+package io.github.wulkanowy.schools
 
-import io.github.wulkanowy.plugins.*
+import io.github.wulkanowy.schools.plugins.configureRouting
+import io.github.wulkanowy.schools.plugins.configureSerialization
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
@@ -11,6 +12,7 @@ fun main() {
 }
 
 fun Application.module() {
+    DatabaseFactory.init()
     configureSerialization()
     configureRouting()
 }

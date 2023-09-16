@@ -1,6 +1,6 @@
 package io.github.wulkanowy
 
-import io.github.wulkanowy.plugins.*
+import io.github.wulkanowy.schools.plugins.configureRouting
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
