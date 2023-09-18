@@ -40,12 +40,14 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
+    implementation("io.ktor:ktor-server-auth:$ktor_version")
 
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposed_version")
     implementation("com.impossibl.pgjdbc-ng:pgjdbc-ng:0.8.9")
+    implementation("io.ktor:ktor-server-auth-jvm:2.3.4")
 
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("io.ktor:ktor-server-test-host-jvm")

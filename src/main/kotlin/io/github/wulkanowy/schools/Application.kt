@@ -1,5 +1,6 @@
 package io.github.wulkanowy.schools
 
+import io.github.wulkanowy.schools.plugins.configureAuthorization
 import io.github.wulkanowy.schools.plugins.configureRouting
 import io.github.wulkanowy.schools.plugins.configureSerialization
 import io.ktor.server.application.*
@@ -14,5 +15,6 @@ fun main() {
 fun Application.module() {
     DatabaseFactory.init()
     configureSerialization()
+    configureAuthorization()
     configureRouting()
 }
