@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  schools:
+    build: .
+    ports:
+      - "3002:3002"
+    networks:
+      - docker_network
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=schools
+    ports:
+      - '5004:5432'
+    networks:
+      - docker_network
+    volumes:
+      - db:/var/lib/postgresql/data
+
+volumes:
+  db:
+    driver: local
+
+networks:
+  docker_network:
+    name: wulkanowy_network
