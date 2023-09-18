@@ -3,6 +3,8 @@ version: "3.8"
 services:
   schools:
     build: .
+    env_file:
+      - .env
     ports:
       - "3002:3002"
     networks:
