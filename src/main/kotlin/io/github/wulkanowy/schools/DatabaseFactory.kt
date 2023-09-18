@@ -11,7 +11,7 @@ object DatabaseFactory {
     fun init() {
         val host = System.getenv("DB_HOST") ?: "localhost"
         val database = Database.connect(
-            url = "jdbc:pgsql://$host:5004/schools",
+            url = "jdbc:pgsql://$host:5432/schools",
             driver = "com.impossibl.postgres.jdbc.PGDriver",
             user = "postgres",
             password = "postgres",
