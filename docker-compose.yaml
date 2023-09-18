@@ -20,7 +20,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=schools
     ports:
-      - '5004:5432'
+      - '5432:5004'
     networks:
       - docker_network
     volumes:
