@@ -9,12 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     environment: oracle-cloud
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Create .env file
-        uses: SpicyPizza/create-envfile@v1
+        uses: SpicyPizza/create-envfile@v2
         with:
+          envkey_DEBUG: true
+          envkey_DB_HOST: "db"
           envkey_TOKEN: ${{ secrets.TOKEN }}
-          envkey_DB_HOST: ${{ secrets.DB_HOST }}
       - uses: alex-ac/github-action-ssh-docker-compose@master
         name: Docker-Compose Remote Deployment
         with:
