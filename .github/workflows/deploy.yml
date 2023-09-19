@@ -21,6 +21,7 @@ jobs:
         uses: timheuer/base64-to-file@v1
         with:
           fileName: "wulkanowy-gac.json"
+          fileDir: "./"
           encodedString: ${{ secrets.GAC_CONTENT }}
       - uses: alex-ac/github-action-ssh-docker-compose@master
         name: Docker-Compose Remote Deployment
