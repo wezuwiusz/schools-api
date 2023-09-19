@@ -41,6 +41,8 @@ dependencies {
     implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("io.ktor:ktor-server-auth:$ktor_version")
+    implementation("com.google.apis:google-api-services-playintegrity:v1-rev20230910-2.0.0")
+    implementation("com.google.auth:google-auth-library-oauth2-http:1.19.0")
 
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")

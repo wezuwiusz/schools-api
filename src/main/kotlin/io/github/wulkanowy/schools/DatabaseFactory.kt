@@ -9,7 +9,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object DatabaseFactory {
     fun init() {
-        val host = System.getenv("DB_HOST") ?: "localhost"
+        val host = System.getenv("DB_HOST")
         val database = Database.connect(
             url = "jdbc:pgsql://$host:5432/schools",
             driver = "com.impossibl.postgres.jdbc.PGDriver",
