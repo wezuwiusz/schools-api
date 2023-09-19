@@ -17,8 +17,11 @@ jobs:
           envkey_DB_HOST: "db"
           envkey_TOKEN: ${{ secrets.TOKEN }}
           envkey_GOOGLE_APPLICATION_CREDENTIALS: "app/wulkanowy-gac.json"
-      - name: Create File
-        run: echo "${{ secrets.GAC_CONTENT }}" > wulkanowy-gac.json
+      - name: Create GAC file
+        uses: timheuer/base64-to-file@v1
+        with:
+          fileName: "wulkanowy-gac.json"
+          encodedString: ${{ secrets.GAC_CONTENT }}
       - uses: alex-ac/github-action-ssh-docker-compose@master
         name: Docker-Compose Remote Deployment
         with:
