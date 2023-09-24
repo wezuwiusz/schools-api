@@ -1,7 +1,5 @@
 package io.github.wulkanowy.schools.integrity
 
-import java.security.MessageDigest
-import java.util.*
 import java.util.logging.Logger
 
 // Package name of the client application
@@ -15,28 +13,15 @@ const val VERDICT_VAL_MEETS_VIRTUAL_INTEGRITY = "MEETS_VIRTUAL_INTEGRITY"
 const val VERDICT_VAL_VERSION_UNRECOGNIZED = "UNRECOGNIZED_VERSION"
 const val VERDICT_VAL_VERSION_RECOGNIZED = "PLAY_RECOGNIZED"
 const val VERDICT_VAL_LICENSED = "LICENSED"
-const val VERDICT_VAL_UNLICENSED = "UNLICENSED"
 
 fun validateCommand(originalNonce: String, integrityVerdict: IntegrityVerdict): ValidateResult {
     if (integrityVerdict.requestDetails.nonce != null) {
-        var nonceString: String = integrityVerdict.requestDetails.nonce
-        // Server might re-pad base64 with unicode '=', trim any that exist to
-        // match our web-safe original
-        val utfEqualRegex = "\\u003d$".toRegex()
-        nonceString = utfEqualRegex.replace(nonceString, "")
-        // The nonce string contains two parts, the random number previously generated,
-        // and the SHA256 hash of the command string, we need to separate them
-        // The values were written out as hex values, so they are base64 compatible, but
-        // we don't actually base64 decode them.
-        val randomString = nonceString.slice(IntRange(0, (RANDOM_BYTE_COUNT * 2) - 1))
-        val hashString = nonceString.slice(IntRange(RANDOM_BYTE_COUNT * 2, nonceString.lastIndex))
-
+        val decryptedNonce = integrityVerdict.requestDetails.nonce
         val log = Logger.getLogger("validateCommand")
-        log.info("Raw nonce: $nonceString")
-        log.info("Random nonce segment: $randomString")
-        log.info("Hash nonce segment: $hashString")
+        log.info("Original nonce: $originalNonce")
+        log.info("Decrypted nonce: $decryptedNonce")
 
-        return if (validateHash(originalNonce, hashString)) {
+        return if (originalNonce == decryptedNonce) {
             if (validateVerdict(integrityVerdict)) {
                 ValidateResult.VALIDATE_SUCCESS
             } else {
@@ -47,21 +32,6 @@ fun validateCommand(originalNonce: String, integrityVerdict: IntegrityVerdict): 
         }
     }
     return ValidateResult.VALIDATE_NONCE_NOT_FOUND
-}
-
-fun validateHash(commandString: String, hashString: String): Boolean {
-    val messageDigest = MessageDigest.getInstance("SHA-256")
-    val commandHashBytes = messageDigest.digest(commandString.toByteArray(Charsets.UTF_8))
-    val commandHashString = commandHashBytes.toHexString()
-    val hashMatch = hashString.contentEquals(commandHashString)
-
-    val log = Logger.getLogger("validateHash")
-    log.info("Command string: $commandString")
-    log.info("token hash string: $hashString")
-    log.info("command hash string: $commandHashString")
-    log.info("hashMatch: $hashMatch")
-
-    return hashMatch
 }
 
 fun validateVerdict(integrityVerdict: IntegrityVerdict): Boolean {
