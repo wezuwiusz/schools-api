@@ -15,6 +15,7 @@ class LoginEventDao {
 
     private fun resultRowToLoginEvent(row: ResultRow) = LoginEvent(
         schoolName = row[LoginEvents.schoolName],
+        schoolShort = row[LoginEvents.schoolShort],
         schoolAddress = row[LoginEvents.schoolAddress],
         scraperBaseUrl = row[LoginEvents.scraperBaseUrl],
         symbol = row[LoginEvents.symbol],
@@ -32,6 +33,7 @@ class LoginEventDao {
             LoginEvents.insert {
                 it[uuid] = event.uuid
                 it[schoolName] = event.schoolName
+                it[schoolShort] = event.schoolShort
                 it[schoolAddress] = event.schoolAddress
                 it[scraperBaseUrl] = event.scraperBaseUrl
                 it[symbol] = event.symbol
