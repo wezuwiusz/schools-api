@@ -17,9 +17,6 @@ const val VERDICT_VAL_LICENSED = "LICENSED"
 fun validateCommand(originalNonce: String, integrityVerdict: IntegrityVerdict): ValidateResult {
     if (integrityVerdict.requestDetails.nonce != null) {
         val decryptedNonce = integrityVerdict.requestDetails.nonce
-        val log = Logger.getLogger("validateCommand")
-        log.info("Original nonce: $originalNonce")
-        log.info("Decrypted nonce: $decryptedNonce")
 
         return if (originalNonce == decryptedNonce) {
             if (validateVerdict(integrityVerdict)) {

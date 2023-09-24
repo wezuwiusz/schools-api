@@ -8,6 +8,7 @@ import com.google.auth.http.HttpCredentialsAdapter
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.common.collect.Lists
 import kotlinx.serialization.json.Json
+import java.util.logging.Logger
 
 fun decryptToken(tokenString: String, playIntegrity: PlayIntegrity = getPlayIntegrity()): IntegrityVerdictPayload {
     val decodeTokenRequest = DecodeIntegrityTokenRequest().setIntegrityToken(tokenString)
@@ -15,6 +16,9 @@ fun decryptToken(tokenString: String, playIntegrity: PlayIntegrity = getPlayInte
         .decodeIntegrityToken(APPLICATION_PACKAGE_IDENTIFIER, decodeTokenRequest)
         .execute()
         .toPrettyString()
+
+    val log = Logger.getLogger("decryptToken")
+    log.info("Decrypted token: $returnString")
 
     return Json.decodeFromString(returnString)
 }
