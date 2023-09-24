@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.insertIgnore
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.Instant
@@ -30,7 +31,7 @@ class LoginEventDao {
 
     suspend fun addLoginEvent(event: LoginEvent) = withContext(Dispatchers.IO) {
         transaction {
-            LoginEvents.insert {
+            LoginEvents.insertIgnore {
                 it[uuid] = event.uuid
                 it[schoolName] = event.schoolName
                 it[schoolShort] = event.schoolShort
