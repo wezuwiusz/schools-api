@@ -48,7 +48,8 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposed_version")
-    implementation("com.impossibl.pgjdbc-ng:pgjdbc-ng:0.8.9")
+    implementation("org.postgresql:postgresql:42.6.0")
+    implementation("org.flywaydb:flyway-core:9.22.2")
     implementation("io.ktor:ktor-server-auth-jvm:2.3.4")
 
     testImplementation("io.ktor:ktor-server-tests-jvm")

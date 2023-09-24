@@ -18,6 +18,7 @@ class LoginEventDao {
         schoolAddress = row[LoginEvents.schoolAddress],
         scraperBaseUrl = row[LoginEvents.scraperBaseUrl],
         symbol = row[LoginEvents.symbol],
+        schoolId = row[LoginEvents.schoolId],
         loginType = row[LoginEvents.loginType],
         uuid = row[LoginEvents.uuid],
     )
@@ -34,6 +35,7 @@ class LoginEventDao {
                 it[schoolAddress] = event.schoolAddress
                 it[scraperBaseUrl] = event.scraperBaseUrl
                 it[symbol] = event.symbol
+                it[schoolId] = event.schoolId
                 it[loginType] = event.loginType
                 it[timestamp] = Instant.now()
             }

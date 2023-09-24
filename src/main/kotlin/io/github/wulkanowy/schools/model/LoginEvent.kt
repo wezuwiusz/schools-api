@@ -1,9 +1,9 @@
 package io.github.wulkanowy.schools.model
 
 import kotlinx.serialization.Serializable
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.javatime.timestamp
-import java.util.UUID
+import java.util.*
 
 @Serializable
 data class LoginEvent(
@@ -12,6 +12,7 @@ data class LoginEvent(
     val schoolAddress: String,
     val scraperBaseUrl: String,
     val symbol: String,
+    val schoolId: String,
     val loginType: String,
 )
 
@@ -23,6 +24,7 @@ object LoginEvents : Table() {
     val schoolAddress = varchar("schoolAddress", 256)
     val scraperBaseUrl = varchar("scraperBaseUrl", 128)
     val symbol = varchar("symbol", 64)
+    val schoolId = varchar("schoolId", 16)
     val loginType = varchar("loginType", 32)
 
     override val primaryKey = PrimaryKey(id)
