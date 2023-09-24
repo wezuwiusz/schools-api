@@ -19,6 +19,7 @@ class LoginEventDao {
         scraperBaseUrl = row[LoginEvents.scraperBaseUrl],
         symbol = row[LoginEvents.symbol],
         loginType = row[LoginEvents.loginType],
+        uuid = row[LoginEvents.uuid],
     )
 
     suspend fun allLoginEvents(): List<LoginEvent> = dbQuery {
@@ -28,6 +29,7 @@ class LoginEventDao {
     suspend fun addLoginEvent(event: LoginEvent) = withContext(Dispatchers.IO) {
         transaction {
             LoginEvents.insert {
+                it[uuid] = event.uuid
                 it[schoolName] = event.schoolName
                 it[schoolAddress] = event.schoolAddress
                 it[scraperBaseUrl] = event.scraperBaseUrl

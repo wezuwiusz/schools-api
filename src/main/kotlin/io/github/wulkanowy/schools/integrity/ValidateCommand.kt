@@ -4,9 +4,6 @@ import java.security.MessageDigest
 import java.util.*
 import java.util.logging.Logger
 
-// Five minute timeout (in milliseconds)
-const val NONCE_TIMEOUT = 1000 * 60 * 5
-
 // Package name of the client application
 const val APPLICATION_PACKAGE_IDENTIFIER = "io.github.wulkanowy"
 
@@ -20,14 +17,13 @@ const val VERDICT_VAL_VERSION_RECOGNIZED = "PLAY_RECOGNIZED"
 const val VERDICT_VAL_LICENSED = "LICENSED"
 const val VERDICT_VAL_UNLICENSED = "UNLICENSED"
 
-fun validateCommand(commandString: String, integrityVerdict: IntegrityVerdict): ValidateResult {
+fun validateCommand(originalNonce: String, integrityVerdict: IntegrityVerdict): ValidateResult {
     if (integrityVerdict.requestDetails.nonce != null) {
         var nonceString: String = integrityVerdict.requestDetails.nonce
         // Server might re-pad base64 with unicode '=', trim any that exist to
         // match our web-safe original
         val utfEqualRegex = "\\u003d$".toRegex()
         nonceString = utfEqualRegex.replace(nonceString, "")
-        val nonceBytes = Base64.getUrlDecoder().decode(nonceString)
         // The nonce string contains two parts, the random number previously generated,
         // and the SHA256 hash of the command string, we need to separate them
         // The values were written out as hex values, so they are base64 compatible, but
@@ -40,32 +36,20 @@ fun validateCommand(commandString: String, integrityVerdict: IntegrityVerdict): 
         log.info("Random nonce segment: $randomString")
         log.info("Hash nonce segment: $hashString")
 
-        // Verify the random part of the nonce was a random number previously generated on
-        // the server, and that it hasn't expired
-        val matchingRandom = randomStorage.find { it.random == randomString }
-        if (matchingRandom != null) {
-            val currentTimestamp = System.currentTimeMillis()
-            val timeDelta = currentTimestamp - matchingRandom.timestamp
-            // Can only use once, remove from the server's random list after matching
-            randomStorage.remove(matchingRandom)
-            if (timeDelta < NONCE_TIMEOUT) {
-                return if (validateHash(commandString, hashString)) {
-                    if (validateVerdict(integrityVerdict)) {
-                        ValidateResult.VALIDATE_SUCCESS
-                    } else {
-                        ValidateResult.VALIDATE_INTEGRITY_FAIL
-                    }
-                } else {
-                    ValidateResult.VALIDATE_NONCE_MISMATCH
-                }
+        return if (validateHash(originalNonce, hashString)) {
+            if (validateVerdict(integrityVerdict)) {
+                ValidateResult.VALIDATE_SUCCESS
+            } else {
+                ValidateResult.VALIDATE_INTEGRITY_FAIL
             }
-            return ValidateResult.VALIDATE_NONCE_EXPIRED
+        } else {
+            ValidateResult.VALIDATE_NONCE_MISMATCH
         }
     }
     return ValidateResult.VALIDATE_NONCE_NOT_FOUND
 }
 
-fun validateHash(commandString: String, hashString: String) : Boolean {
+fun validateHash(commandString: String, hashString: String): Boolean {
     val messageDigest = MessageDigest.getInstance("SHA-256")
     val commandHashBytes = messageDigest.digest(commandString.toByteArray(Charsets.UTF_8))
     val commandHashString = commandHashBytes.toHexString()
@@ -80,7 +64,7 @@ fun validateHash(commandString: String, hashString: String) : Boolean {
     return hashMatch
 }
 
-fun validateVerdict(integrityVerdict: IntegrityVerdict) : Boolean {
+fun validateVerdict(integrityVerdict: IntegrityVerdict): Boolean {
     // Process the integrity verdict and 'validate' the command if the following positive
     // signals exist:
     // 1) Positive device integrity signal
@@ -99,12 +83,9 @@ fun validateVerdict(integrityVerdict: IntegrityVerdict) : Boolean {
 
     if (metDeviceIntegrity) {
         val recognitionVerdict = integrityVerdict.appIntegrity.appRecognitionVerdict
-        if (recognitionVerdict == VERDICT_VAL_VERSION_RECOGNIZED ||
-            recognitionVerdict == VERDICT_VAL_VERSION_UNRECOGNIZED) {
-            if (integrityVerdict.accountDetails.appLicensingVerdict ==
-                VERDICT_VAL_LICENSED) {
-                if (integrityVerdict.requestDetails.requestPackageName ==
-                    APPLICATION_PACKAGE_IDENTIFIER) {
+        if (recognitionVerdict == VERDICT_VAL_VERSION_RECOGNIZED || recognitionVerdict == VERDICT_VAL_VERSION_UNRECOGNIZED) {
+            if (integrityVerdict.accountDetails.appLicensingVerdict == VERDICT_VAL_LICENSED) {
+                if (integrityVerdict.requestDetails.requestPackageName == APPLICATION_PACKAGE_IDENTIFIER) {
                     return true
                 }
             }

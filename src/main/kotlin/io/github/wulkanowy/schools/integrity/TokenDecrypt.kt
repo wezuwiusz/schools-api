@@ -7,9 +7,10 @@ import com.google.api.services.playintegrity.v1.model.DecodeIntegrityTokenReques
 import com.google.auth.http.HttpCredentialsAdapter
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.common.collect.Lists
+import kotlinx.serialization.json.Json
 import java.util.logging.Logger
 
-fun decryptToken(tokenString: String, playIntegrity: PlayIntegrity = getPlayIntegrity()): String {
+fun decryptToken(tokenString: String, playIntegrity: PlayIntegrity = getPlayIntegrity()): IntegrityVerdictPayload {
     val decodeTokenRequest = DecodeIntegrityTokenRequest().setIntegrityToken(tokenString)
     val returnString = playIntegrity.v1()
         .decodeIntegrityToken(APPLICATION_PACKAGE_IDENTIFIER, decodeTokenRequest)
@@ -19,7 +20,7 @@ fun decryptToken(tokenString: String, playIntegrity: PlayIntegrity = getPlayInte
     val log = Logger.getLogger("decryptToken")
     log.info("Decrypted token: $returnString")
 
-    return returnString
+    return Json.decodeFromString(returnString)
 }
 
 fun getPlayIntegrity(): PlayIntegrity {

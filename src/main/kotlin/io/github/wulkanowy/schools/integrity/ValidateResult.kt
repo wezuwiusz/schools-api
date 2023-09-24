@@ -5,7 +5,6 @@ package io.github.wulkanowy.schools.integrity
 enum class ValidateResult {
     VALIDATE_SUCCESS,
     VALIDATE_NONCE_NOT_FOUND,
-    VALIDATE_NONCE_EXPIRED,
     VALIDATE_NONCE_MISMATCH,
     VALIDATE_INTEGRITY_FAIL
 }

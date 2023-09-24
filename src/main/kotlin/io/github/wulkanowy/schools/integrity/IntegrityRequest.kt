@@ -3,7 +3,7 @@ package io.github.wulkanowy.schools.integrity
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CommandResult(
-    val commandSuccess: Boolean,
-    val diagnosticMessage: String,
+data class IntegrityRequest<T>(
+    val tokenString: String,
+    val data: T,
 )
