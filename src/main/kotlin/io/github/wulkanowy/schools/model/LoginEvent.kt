@@ -22,7 +22,7 @@ object LoginEvents : Table() {
     val uuid = varchar("uuid", 36)
     val timestamp = timestamp("timestamp")
     val schoolName = varchar("schoolName", 256)
-    val schoolShort = varchar("schoolShortName", 256)
+    val schoolShort = varchar("schoolShortName", 256).default("")
     val schoolAddress = varchar("schoolAddress", 256)
     val scraperBaseUrl = varchar("scraperBaseUrl", 128)
     val symbol = varchar("symbol", 64)
