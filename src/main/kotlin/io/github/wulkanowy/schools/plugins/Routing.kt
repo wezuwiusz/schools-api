@@ -8,6 +8,8 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import java.util.logging.Level
+import java.util.logging.Logger
 
 fun Application.configureRouting() {
     val loginEventDao = LoginEventDao()
@@ -21,6 +23,7 @@ fun Application.configureRouting() {
 
             when (val result = validateCommand(request.data.uuid, integrityVerdict)) {
                 ValidateResult.VALIDATE_SUCCESS -> {
+                    Logger.getLogger("result").log(Level.INFO, "${request.data.uuid}: $result")
                     loginEventDao.addLoginEvent(request.data)
                     call.respond(status = HttpStatusCode.NoContent, "")
                 }
@@ -28,6 +31,7 @@ fun Application.configureRouting() {
                 ValidateResult.VALIDATE_NONCE_NOT_FOUND,
                 ValidateResult.VALIDATE_NONCE_MISMATCH,
                 ValidateResult.VALIDATE_INTEGRITY_FAIL -> {
+                    Logger.getLogger("result").log(Level.INFO, "${request.data.uuid}: $result")
                     call.respond(status = HttpStatusCode.BadRequest, message = result.name)
                 }
             }

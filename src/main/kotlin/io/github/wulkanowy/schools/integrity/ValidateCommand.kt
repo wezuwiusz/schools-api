@@ -1,7 +1,5 @@
 package io.github.wulkanowy.schools.integrity
 
-import java.util.logging.Logger
-
 // Package name of the client application
 const val APPLICATION_PACKAGE_IDENTIFIER = "io.github.wulkanowy"
 

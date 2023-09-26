@@ -13,7 +13,7 @@ jobs:
       - name: Create .env file
         uses: SpicyPizza/create-envfile@v2
         with:
-          envkey_DEBUG: true
+          envkey_DEBUG: false
           envkey_DB_HOST: "db"
           envkey_TOKEN: ${{ secrets.TOKEN }}
           envkey_GOOGLE_APPLICATION_CREDENTIALS: "app/wulkanowy-gac.json"
