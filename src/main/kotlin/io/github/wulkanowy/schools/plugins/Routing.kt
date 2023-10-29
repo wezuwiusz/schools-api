@@ -47,6 +47,7 @@ fun Application.configureRouting() {
                     rows = loginEventDao.allLoginEvents(
                         page = params["page"]?.toLongOrNull() ?: 0,
                         pageSize = params["pageSize"]?.toIntOrNull() ?: 10,
+                        text = params["text"],
                         orderBy = when (params["sortBy"]) {
                             "id" -> LoginEvents.id
                             "schoolName" -> LoginEvents.schoolName
@@ -60,7 +61,7 @@ fun Application.configureRouting() {
                             else -> null
                         },
                     ),
-                    rowsCount = loginEventDao.getLoginEventsCount(),
+                    rowsCount = loginEventDao.getCount(text = params["text"]),
                 )
             )
         }

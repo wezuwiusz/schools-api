@@ -25,26 +25,33 @@ class LoginEventDao {
     suspend fun allLoginEvents(
         page: Long,
         pageSize: Int,
+        text: String?,
         orderBy: Column<*>?,
         order: SortOrder?,
     ): List<LoginEvent> = dbQuery {
-        LoginEvents
-            .slice(
-                customDistinctOn(LoginEvents.schoolId, LoginEvents.symbol, LoginEvents.scraperBaseUrl),
-                *(LoginEvents.columns).toTypedArray()
-            )
-            .selectAll()
-            .limit(pageSize, page * pageSize)
+        getQuery(text)
             .let {
                 if (orderBy != null && order != null) {
                     it.orderBy(orderBy, order)
                 } else it
             }
+            .limit(pageSize, page * pageSize)
             .map(::resultRowToLoginEvent)
     }
 
-    suspend fun getLoginEventsCount(): Long = dbQuery {
-        LoginEvents.selectAll().count()
+    suspend fun getCount(text: String?) = dbQuery {
+        getQuery(text).count()
+    }
+
+    private suspend fun getQuery(text: String?) = dbQuery {
+        LoginEvents
+            .selectAll()
+            .let {
+                if (text.isNullOrBlank()) it else {
+                    it.orWhere { LoginEvents.schoolName like "%${text}%" }
+                        .orWhere { LoginEvents.schoolAddress like "%${text}%" }
+                }
+            }
     }
 
     suspend fun addLoginEvent(event: LoginEvent) = withContext(Dispatchers.IO) {

@@ -8,7 +8,7 @@
     let rows = [];
     let page = 0; //first page
     let pageIndex = 0; //first row
-    let pageSize = 10; //optional, 10 by default
+    let pageSize = 15; //optional, 10 by default
 
     let loading = true;
     let rowsCount = 0;
