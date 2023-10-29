@@ -1,3 +1,7 @@
+FROM node:21
+WORKDIR /home/gradle/src/app
+RUN npm install && npm run build
+
 FROM gradle:7-jdk11 AS build
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
