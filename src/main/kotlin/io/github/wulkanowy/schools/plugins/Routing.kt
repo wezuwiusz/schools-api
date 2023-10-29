@@ -42,26 +42,32 @@ fun Application.configureRouting() {
         }
         get("/log/list") {
             val params = call.request.queryParameters
+            val orderBy = when (params["sortBy"]) {
+                "id" -> LoginEvents.id
+                "schoolName" -> LoginEvents.schoolName
+                "schoolShort" -> LoginEvents.schoolShort
+                "schoolAddress" -> LoginEvents.schoolAddress
+                else -> null
+            }
+            val order = when (params["order"]) {
+                "asc" -> SortOrder.ASC
+                "desc" -> SortOrder.DESC
+                else -> null
+            }
             call.respond(
                 ListResponse(
                     rows = loginEventDao.allLoginEvents(
                         page = params["page"]?.toLongOrNull() ?: 0,
                         pageSize = params["pageSize"]?.toIntOrNull() ?: 10,
                         text = params["text"],
-                        orderBy = when (params["sortBy"]) {
-                            "id" -> LoginEvents.id
-                            "schoolName" -> LoginEvents.schoolName
-                            "schoolShort" -> LoginEvents.schoolShort
-                            "schoolAddress" -> LoginEvents.schoolAddress
-                            else -> null
-                        },
-                        order = when (params["order"]) {
-                            "asc" -> SortOrder.ASC
-                            "desc" -> SortOrder.DESC
-                            else -> null
-                        },
+                        orderBy = orderBy,
+                        order = order,
                     ),
-                    rowsCount = loginEventDao.getCount(text = params["text"]),
+                    rowsCount = loginEventDao.getCount(
+                        text = params["text"],
+                        orderBy = orderBy,
+                        order = order,
+                    ),
                 )
             )
         }

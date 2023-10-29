@@ -11,6 +11,12 @@ import java.time.Instant
 
 class LoginEventDao {
 
+    private val uniqueColumns = listOf(
+        LoginEvents.schoolId,
+        LoginEvents.symbol,
+        LoginEvents.scraperBaseUrl,
+    )
+
     private fun resultRowToLoginEvent(row: ResultRow) = LoginEvent(
         schoolName = row[LoginEvents.schoolName],
         schoolShort = row[LoginEvents.schoolShort],
@@ -29,23 +35,38 @@ class LoginEventDao {
         orderBy: Column<*>?,
         order: SortOrder?,
     ): List<LoginEvent> = dbQuery {
-        getQuery(text)
-            .let {
-                if (orderBy != null && order != null) {
-                    it.orderBy(orderBy, order)
-                } else it
-            }
+        getQuery(text, orderBy, order)
             .limit(pageSize, page * pageSize)
             .map(::resultRowToLoginEvent)
     }
 
-    suspend fun getCount(text: String?) = dbQuery {
-        getQuery(text).count()
+    suspend fun getCount(
+        text: String?,
+        orderBy: Column<*>?,
+        order: SortOrder?,
+    ) = dbQuery {
+        val query = getQuery(text, orderBy, order).alias("getAll")
+        query.selectAll().count()
     }
 
-    private suspend fun getQuery(text: String?) = dbQuery {
+    private suspend fun getQuery(
+        text: String?,
+        orderBy: Column<*>?,
+        order: SortOrder?,
+    ) = dbQuery {
+        val currentOrderBy = listOfNotNull(orderBy).toSet()
+        val distinctColumns = currentOrderBy + (uniqueColumns - currentOrderBy)
         LoginEvents
+            .slice(
+                customDistinctOn(*distinctColumns.toTypedArray()),
+                *(LoginEvents.columns).toTypedArray()
+            )
             .selectAll()
+            .let { query ->
+                if (order != null) {
+                    query.orderBy(*distinctColumns.map { it to order }.toTypedArray())
+                } else query
+            }
             .let {
                 if (text.isNullOrBlank()) it else {
                     it.orWhere { LoginEvents.schoolName like "%${text}%" }
