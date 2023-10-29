@@ -1,9 +1,10 @@
-FROM node:21
-WORKDIR /home/gradle/src/app
+FROM node:21 as fronted
+COPY --chown=node:node . /home/node/src
+WORKDIR /home/node/src/app
 RUN npm install && npm run build
 
 FROM gradle:7-jdk11 AS build
-COPY --chown=gradle:gradle . /home/gradle/src
+COPY --from=fronted --chown=gradle:gradle  /home/node/src /home/gradle/src
 WORKDIR /home/gradle/src
 RUN gradle buildFatJar --no-daemon
 
