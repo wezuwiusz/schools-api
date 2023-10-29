@@ -27,7 +27,7 @@
   export let pageIndex = 0;
   export let pageSize = 10;
   export let responsive = true;
-  export let rows;
+  export let rows = [];
   export let serverSide = false;
   export let labels = {
     empty: "No records available",
@@ -38,7 +38,7 @@
   let buttons = [-2, -1, 0, 1, 2];
   let pageCount = 0;
 
-  $: filteredRows = rows;
+  $: filteredRows = rows || [];
   $: visibleRows = filteredRows.slice(pageIndex, pageIndex + pageSize);
 
   setContext("state", {

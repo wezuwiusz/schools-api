@@ -2,6 +2,7 @@ package io.github.wulkanowy.schools.plugins
 
 import io.github.wulkanowy.schools.dao.LoginEventDao
 import io.github.wulkanowy.schools.integrity.*
+import io.github.wulkanowy.schools.model.ListResponse
 import io.github.wulkanowy.schools.model.LoginEvent
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -38,7 +39,16 @@ fun Application.configureRouting() {
             }
         }
         get("/log/list") {
-            call.respond(loginEventDao.allLoginEvents())
+            val params = call.request.queryParameters
+            call.respond(
+                ListResponse(
+                    rows = loginEventDao.allLoginEvents(
+                        page = params["page"]?.toLongOrNull() ?: 0,
+                        pageSize = params["pageSize"]?.toIntOrNull() ?: 10,
+                    ),
+                    rowsCount = loginEventDao.getLoginEventsCount(),
+                )
+            )
         }
         singlePageApplication {
             useResources = true

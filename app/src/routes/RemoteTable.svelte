@@ -4,16 +4,15 @@
     import { onMount } from "svelte";
     import Table, { Pagination, Row, Search, Sort } from "./Table.svelte";
     import { getData } from "./server.js";
-    import { sortNumber, sortString } from "./sorting.js";
 
     let rows = [];
     let page = 0; //first page
     let pageIndex = 0; //first row
-    let pageSize = 3; //optional, 10 by default
+    let pageSize = 10; //optional, 10 by default
 
     let loading = true;
     let rowsCount = 0;
-    let text;
+    let text = "";
     let sorting;
 
     onMount(async () => {
@@ -57,24 +56,24 @@
   <tr>
     <th>
       Name
-      <Sort key="name" on:sort={onSort} />
+      <Sort key="schoolName" on:sort={onSort} />
     </th>
     <th>
-      Lastname
-      <Sort key="lastName" on:sort={onSort} />
+      Short
+      <Sort key="schoolShort" on:sort={onSort} />
     </th>
     <th>
-      Age
-      <Sort key="age" on:sort={onSort} />
+      Address
+      <Sort key="schoolAddress" on:sort={onSort} />
     </th>
   </tr>
   </thead>
   <tbody>
   {#each rows2 as row, index (row)}
     <Row {index} on:click={() => onCellClick(row)}>
-      <td data-label="Name">{row.name}</td>
-      <td data-label="Lastname">{row.lastName}</td>
-      <td data-label="Age">{row.age}</td>
+      <td data-label="Name">{row.schoolName}</td>
+      <td data-label="Short">{row.schoolShort}</td>
+      <td data-label="Address">{row.schoolAddress}</td>
     </Row>
   {/each}
   </tbody>

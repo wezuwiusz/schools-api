@@ -5,10 +5,7 @@ import io.github.wulkanowy.schools.model.LoginEvent
 import io.github.wulkanowy.schools.model.LoginEvents
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.insertIgnore
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.Instant
 
@@ -25,8 +22,15 @@ class LoginEventDao {
         uuid = row[LoginEvents.uuid],
     )
 
-    suspend fun allLoginEvents(): List<LoginEvent> = dbQuery {
-        LoginEvents.selectAll().map(::resultRowToLoginEvent)
+    suspend fun allLoginEvents(page: Long, pageSize: Int): List<LoginEvent> = dbQuery {
+        LoginEvents
+            .selectAll()
+            .limit(pageSize, page * pageSize)
+            .map(::resultRowToLoginEvent)
+    }
+
+    suspend fun getLoginEventsCount(): Long = dbQuery {
+        LoginEvents.selectAll().count()
     }
 
     suspend fun addLoginEvent(event: LoginEvent) = withContext(Dispatchers.IO) {
