@@ -4,12 +4,14 @@ import io.github.wulkanowy.schools.dao.LoginEventDao
 import io.github.wulkanowy.schools.integrity.*
 import io.github.wulkanowy.schools.model.ListResponse
 import io.github.wulkanowy.schools.model.LoginEvent
+import io.github.wulkanowy.schools.model.LoginEvents
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.jetbrains.exposed.sql.SortOrder
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -45,6 +47,18 @@ fun Application.configureRouting() {
                     rows = loginEventDao.allLoginEvents(
                         page = params["page"]?.toLongOrNull() ?: 0,
                         pageSize = params["pageSize"]?.toIntOrNull() ?: 10,
+                        orderBy = when (params["sortBy"]) {
+                            "id" -> LoginEvents.id
+                            "schoolName" -> LoginEvents.schoolName
+                            "schoolShort" -> LoginEvents.schoolShort
+                            "schoolAddress" -> LoginEvents.schoolAddress
+                            else -> null
+                        },
+                        order = when (params["order"]) {
+                            "asc" -> SortOrder.ASC
+                            "desc" -> SortOrder.DESC
+                            else -> null
+                        },
                     ),
                     rowsCount = loginEventDao.getLoginEventsCount(),
                 )

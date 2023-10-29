@@ -22,10 +22,21 @@ class LoginEventDao {
         uuid = row[LoginEvents.uuid],
     )
 
-    suspend fun allLoginEvents(page: Long, pageSize: Int): List<LoginEvent> = dbQuery {
+    suspend fun allLoginEvents(
+        page: Long,
+        pageSize: Int,
+        orderBy: Column<*>?,
+        order: SortOrder?,
+    ): List<LoginEvent> = dbQuery {
         LoginEvents
             .selectAll()
+            .groupBy(LoginEvents.schoolId, LoginEvents.symbol, LoginEvents.scraperBaseUrl)
             .limit(pageSize, page * pageSize)
+            .let {
+                if (orderBy != null && order != null) {
+                    it.orderBy(orderBy, order)
+                } else it
+            }
             .map(::resultRowToLoginEvent)
     }
 
