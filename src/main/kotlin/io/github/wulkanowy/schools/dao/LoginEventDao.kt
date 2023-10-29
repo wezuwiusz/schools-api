@@ -29,8 +29,11 @@ class LoginEventDao {
         order: SortOrder?,
     ): List<LoginEvent> = dbQuery {
         LoginEvents
+            .slice(
+                customDistinctOn(LoginEvents.schoolId, LoginEvents.symbol, LoginEvents.scraperBaseUrl),
+                *(LoginEvents.columns).toTypedArray()
+            )
             .selectAll()
-            .groupBy(LoginEvents.schoolId, LoginEvents.symbol, LoginEvents.scraperBaseUrl)
             .limit(pageSize, page * pageSize)
             .let {
                 if (orderBy != null && order != null) {
