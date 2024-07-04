@@ -25,11 +25,7 @@ application {
 val compileKotlin: org.jetbrains.kotlin.gradle.tasks.KotlinCompile by tasks
 val compileTestKotlin: org.jetbrains.kotlin.gradle.tasks.KotlinCompile by tasks
 
-kotlin {
-    compilerOptions {
-        jvmTarget = JvmTarget.JVM_17
-    }
-}
+kotlin.compilerOptions.jvmTarget.set(JvmTarget.JVM_11)
 
 repositories {
     mavenCentral()
