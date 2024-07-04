@@ -7,6 +7,7 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.testing.*
+import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -31,6 +32,9 @@ class RoutingKtTest {
                     scraperBaseUrl = "https://fakelog.cf",
                     symbol = "powiatwulkanowy",
                     loginType = "STANDARD",
+                    uuid = UUID.randomUUID().toString(),
+                    schoolId = "",
+                    schoolShort = ""
                 )
             )
         }
