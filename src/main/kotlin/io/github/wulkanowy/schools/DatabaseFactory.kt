@@ -11,11 +11,11 @@ import org.jetbrains.exposed.sql.transactions.transaction
 object DatabaseFactory {
     fun init() {
         val host = System.getenv("DB_HOST")
-        val user = "postgres"
-        val password = "postgres"
+        val user = "mysql"
+        val password = "mysql"
         val database = Database.connect(
-            url = "jdbc:postgresql://$host:5432/schools",
-            driver = "org.postgresql.Driver",
+            url = "jdbc:mysql://$host:3306/schools",
+            driver = "com.mysql.cj.jdbc.Driver",
             user = user,
             password = password,
         )

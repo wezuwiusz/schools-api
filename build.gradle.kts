@@ -46,7 +46,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposed_version")
-    implementation("org.postgresql:postgresql:42.7.2")
+    implementation("mysql:mysql-connector-java:8.0.33")
     implementation("org.flywaydb:flyway-core:9.22.2")
     implementation("io.ktor:ktor-server-auth-jvm:2.3.4")
 
